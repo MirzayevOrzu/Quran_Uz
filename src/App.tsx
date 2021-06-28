@@ -2,6 +2,7 @@ import React from 'react';
 import * as ReactRouter from "react-router-dom";
 import Home from './pages/Home';
 import OneSura from './pages/OneSura';
+import './App.css';
 
 const {
   BrowserRouter,

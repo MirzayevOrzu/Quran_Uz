@@ -22,13 +22,11 @@ function OneSura() {
         axios.get(`http://api.alquran.cloud/v1/surah/${params.id}/ar.alafasy`)
         .then(res => {
             if(relevant) {
-                console.log(res.data.data);
                 setSuraDataAudio(res.data.data);    
             }
             axios.get(`https://api.alquran.cloud/v1/surah/${params.id}/uz.sodik`)
             .then(res => {
                 if(relevant) {
-                    console.log(res.data.data);
                     setSuraDataText(res.data.data);
                     setState(true);    
                 }
@@ -45,14 +43,6 @@ function OneSura() {
             relevant = false;
         }
     }, []);
-
-    const handleScroll = (i: number) => {
-        let doc = document.getElementsByClassName("ayah")[i];
-        scrollTo(doc, { top: 200, easing: 'ease-in-out' }).then(function () {
-            // scrolled down 200 pixels, easing on beginning and end
-            console.log("scrolled")
-        })
-    }
  
     const handlePlay = () => {
         var pointer = 0;
@@ -60,28 +50,24 @@ function OneSura() {
         var audioElement = document.getElementById("sura-auto-play") as HTMLAudioElement;
         
         function onload(){
-            var myElement: any = document.body.getElementsByClassName('ayah')[pointer];
-           
-            scrollIntoView(myElement, document.body, { behavior: 'smooth'}).then(
-                function () {
-                    console.log('scrolled to ayah - ' + pointer);
-                }
-            );
-           
-            scrollTo(document.body, { top: window.innerHeight / 2 }).then(function () {
-                console.log("scrolling middle");
+            const element: any = document.body.getElementsByClassName('ayah')[pointer];
+            element.classList.add("active-sura");
+    
+            scrollIntoView( element, document.body, { behavior: 'smooth' })
+            .then(() => {
+                console.log("scrolled to ", pointer + 1);
             });
 
-            audioElement.addEventListener('pause', onaudioPaused, true);
-            audioElement.addEventListener('ended',onaudioEnded,false);
+            audioElement.addEventListener('pause', _ => onaudioPaused(element), true);
+            audioElement.addEventListener('ended', onaudioEnded,false);
             audioElement.src = suraDataAudio.ayahs[pointer].audio;
             audioElement.play();
         }
-        
-        function onaudioPaused(e: any) {
+
+        function onaudioPaused(element: HTMLElement) {
+            element.classList.remove("active-sura");
             console.log('paused');
-            // audioElement.removeEventListener('ended', onaudioEnded);
-        }
+        }   
 
         function onaudioEnded(){  
             // console.log('ended')
@@ -93,7 +79,7 @@ function OneSura() {
                 return
             }
             onload();
-        }
+        } 
         
         onload();
     }
@@ -103,22 +89,24 @@ function OneSura() {
             <h1 className='arabic'>Suratul {suraDataText.name ? suraDataText.name : 'no info'}</h1>
             <button onClick={handlePlay}>Start</button>
 
-            <ReactAudioPlayer id='sura-auto-play' />
+            <ReactAudioPlayer id='sura-auto-play' controls />
             { state && suraDataText.ayahs.map((ayahTranslation: {number: number, text: string}, i: number) => {
                     return (
-                    <div 
-                    className={`ayah`}  
-                    key={new Date().toLocaleDateString() + i} 
-                    style={{padding: "30px 10px", border: "3px solid lightgreen"}}
-                    >
-                        <p className="arabic" style={{textAlign: "right"}}>
-                        {suraDataAudio.ayahs[i].text}
-                        </p>
-                        <button onClick={() => handleScroll(i)}>Scroll</button>
-                        <p className="arabic">
-                          {excludeTafsir(ayahTranslation.text)} 
-                        </p>
-                    </div>
+                        <div 
+                            className="ayah"
+                            key={`${new Date().toLocaleDateString()+i}`} 
+                        >
+                            <div 
+                            style={{padding: "30px 10px", border: "3px solid lightgreen"}}
+                            >
+                                <p className="arabic" style={{textAlign: "right"}}>
+                                    {suraDataAudio.ayahs[i].text}
+                                </p>
+                                <p className="arabic">
+                                    {excludeTafsir(ayahTranslation.text)} 
+                                </p>
+                            </div>
+                        </div>
                     )
             })}
         </div>
