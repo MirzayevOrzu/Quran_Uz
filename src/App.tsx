@@ -1,7 +1,7 @@
 import React from 'react';
 import * as ReactRouter from "react-router-dom";
 import Home from './pages/Home';
-import OneSura from './pages/OneSura';
+import Sura from './pages/Sura';
 import './App.css';
 
 const {
@@ -31,7 +31,7 @@ function App() {
           renders the first one that matches the current URL. */}
       <Switch>
         <Route path="/sura/:id">
-          <OneSura />
+          <Sura />
         </Route>
         <Route path="/">
           <Home />
