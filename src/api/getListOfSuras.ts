@@ -1,5 +1,5 @@
 // not in use for anywhere for now 
-import { getDataSuccess} from '../features/Quran/listOfSurasSlice';
+import { getDataSuccess} from '../features/listOfSurasSlice';
 import { store } from '../app/store';
 import { chapters } from './staticData';
 

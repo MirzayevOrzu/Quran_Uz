@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { RootState } from '../../app/store';
-import { chapters } from '../../api/staticData';
+import type { RootState } from '../app/store';
+import { chapters } from '../api/staticData';
  
 interface Suras {
     data: any[],

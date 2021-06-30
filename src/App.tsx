@@ -1,7 +1,12 @@
 import React from 'react';
+import { fetchReciters, selectReciters, selectRStatus } from './features/reciterSlice';
+import { useAppDispatch, useAppSelector} from './app/hooks';
+
 import * as ReactRouter from "react-router-dom";
 import Home from './pages/Home';
 import Sura from './pages/Sura';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+
 import './App.css';
 
 const {
@@ -11,11 +16,35 @@ const {
   Link,
 } = ReactRouter;
 
+const useStyles = makeStyles((theme: Theme) => createStyles({
+  '@global': {
+    body: {
+      margin: 0,
+      
+    }
+  },
+  root: {
+    backgroundColor: theme.palette.success.light
+  }
+}))
 
 function App() {
+  const classes = useStyles();
+  const reciters = useAppSelector(selectReciters);
+  const recitersStatus = useAppSelector(selectRStatus);
+  const dispatch = useAppDispatch();
+
+  React.useEffect(() => {
+    if (recitersStatus === 'idle') {
+      dispatch(fetchReciters());
+    }
+  }, [recitersStatus, dispatch])
+
+  console.log(reciters);
+
   return (
     <BrowserRouter>
-    <div>
+    <div className={classes.root}>
       <nav>
         <ul>
           <li>

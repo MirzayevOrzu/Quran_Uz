@@ -1,32 +1,53 @@
 import * as React from 'react';
 import { excludeTafsir } from '../utils';
+// mui components
+import Paper from '@material-ui/core/Paper';
+import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+
+const useStyles = makeStyles({
+    root: {
+        width: "100%"
+    },
+    arabic: {
+        fontFamily: 'DroidArabicNaskhRegular',
+        textAlign: "right",
+        fontWeight: "normal",
+        fontStyle: "normal",
+    }
+  });
+  
 
 export interface AyahProps {
     ayahTranslation: {
         text: string;
         number: number;
     },
-    ayahArabic: any
+    ayahArabic: string;
 }
 
 const Ayah = (props: AyahProps) => {
+    const classes = useStyles();
+
     return (
-        <div
+        <Container
             className="ayah"
-            key={`${new Date().toLocaleDateString()}-${props.ayahTranslation.number}`}
+            maxWidth="md"
+            style={{padding: 0}}
         >
-            <div
-                // move this style to mui 
-                style={{ padding: "30px 10px", border: "3px solid lightgreen" }}
-            >
-                <p className="arabic" style={{ textAlign: "right" }}>
-                    {props.ayahArabic}
-                </p>
-                <p>
-                    {excludeTafsir(props.ayahTranslation.text)}
-                </p>
-            </div>
-        </div>
+            <Paper elevation={2} className={classes.root} >
+                <Box m={[1, 2, 3]} p={[1, 2, 3]}>
+                    <Typography variant="h6" className={classes.arabic}>
+                        {props.ayahArabic}
+                    </Typography>
+                    <Typography variant="subtitle1" >
+                        {excludeTafsir(props.ayahTranslation.text)}
+                    </Typography>
+                </Box>
+            </Paper>
+        </Container>
     );
 }
 
